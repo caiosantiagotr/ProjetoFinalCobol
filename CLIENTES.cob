@@ -19,9 +19,9 @@
        FD CLIENTES.
        01 CLIENTES-REG.
        05 CLIENTES-CHAVE.
-       10 CLIENTES-FONE PIC 9(09).
-       05 CLIENTES-NOME PIC X(30).
-       05 CLIENTES-EMAIL PIC X(40).
+       10 CLIENTES-FONE     PIC 9(09).
+       05 CLIENTES-NOME     PIC X(30).
+       05 CLIENTES-EMAIL    PIC X(40).
        WORKING-STORAGE SECTION.
        77 WRK-OPCAO          PIC X(1).
        77 WRK-MODULO         PIC X(25).
@@ -75,8 +75,8 @@
                         USING WRK-TECLA.
        PROCEDURE DIVISION.
        0001-PRINCIPAL SECTION.
-       PERFORM 1000-INICIAR.
-       PERFORM 2000-PROCESSAR.
+       PERFORM 1000-INICIAR THRU 1100-MONTATELA.
+       PERFORM 2000-PROCESSAR UNTIL WRK-OPCAO = 'X'.
        PERFORM 3000-FINALIZAR.
        STOP RUN.
        1000-INICIAR.
@@ -86,14 +86,18 @@
            CLOSE CLIENTES
            OPEN I-O CLIENTES
            END-IF.
+
+           1100-MONTATELA.
            DISPLAY TELA.
            ACCEPT MENU.
+
            2000-PROCESSAR.
+               MOVE SPACES TO WRK-MSGERRO.
                EVALUATE WRK-OPCAO
                WHEN 1
                PERFORM 5000-INCLUIR
                WHEN 2
-               CONTINUE
+               PERFORM 6000-CONSULTAR
                WHEN 3
                CONTINUE
                WHEN 4
@@ -105,6 +109,7 @@
                    DISPLAY 'ENTRE COM OPCAO CORRETA'
                    END-IF
                    END-EVALUATE.
+                       PERFORM 1100-MONTATELA.
        MOVE 'MODULO - INCLUSAO' TO WRK-MODULO.
        3000-FINALIZAR.
        CLOSE CLIENTES.
@@ -123,6 +128,17 @@
        INVALID KEY
        MOVE 'JA EXISTE' TO WRK-MSGERRO
         ACCEPT MOSTRA-ERRO
-       END-WRITE
+       END-WRITE.
+       6000-CONSULTAR.
+       MOVE 'MODULO - CONSULTAR' TO WRK-MODULO.
        DISPLAY TELA.
-           ACCEPT MENU.
+         DISPLAY TELA-REGISTRO.
+         ACCEPT CHAVE.
+         READ CLIENTES
+         INVALID KEY
+       MOVE 'NAO ENCONTRADO' TO WRK-MSGERRO
+        NOT INVALID KEY
+        MOVE '-- ENCONTRADO --' TO WRK-MSGERRO
+        DISPLAY SS-DADOS
+        END-READ.
+            ACCEPT MOSTRA-ERRO.
