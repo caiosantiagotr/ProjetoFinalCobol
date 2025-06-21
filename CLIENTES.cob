@@ -3,7 +3,7 @@
       ************************************
       * AUTHOR: CAIO                      EMPRESA: X
       *OBJETIVO: SISTEMA DE GESTAO DE FLIMES
-      *Data:
+      *Data: 21/06/2025
       **************************************
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
@@ -73,6 +73,7 @@
                    10 COLUMN PLUS 2 PIC X(01)
                        BACKGROUND-COLOR 3
                         USING WRK-TECLA.
+
        PROCEDURE DIVISION.
        0001-PRINCIPAL SECTION.
        PERFORM 1000-INICIAR THRU 1100-MONTATELA.
@@ -129,6 +130,7 @@
        MOVE 'JA EXISTE' TO WRK-MSGERRO
         ACCEPT MOSTRA-ERRO
        END-WRITE.
+
        6000-CONSULTAR.
        MOVE 'MODULO - CONSULTAR' TO WRK-MODULO.
        DISPLAY TELA.
