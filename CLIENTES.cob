@@ -11,13 +11,14 @@
        SELECT CLIENTES ASSIGN TO
        'C:\Users\Windows\Cobol\ProjetoFinalCobol\CLIENTES.DAT'
        ORGANIZATION IS INDEXED
-       ACCESS MODE IS RANDOM
+       ACCESS MODE IS DYNAMIC
        FILE STATUS IS CLIENTES-STATUS
        RECORD KEY IS CLIENTES-CHAVE.
 
        SELECT RELATO ASSIGN TO
        'C:\Users\Windows\Cobol\ProjetoFinalCobol\RELATO.TXT'
-       ORGANIZATION IS SEQUENTIAL
+       ORGANIZATION IS SEQUENTIAL.
+
 
        DATA DIVISION.
            FILE SECTION.
@@ -110,24 +111,24 @@
            2000-PROCESSAR.
            MOVE SPACES TO  CLIENTES-NOME CLIENTES-EMAIL WRK-MSGERRO.
                EVALUATE WRK-OPCAO
-               WHEN 1
-               PERFORM 5000-INCLUIR
-               WHEN 2
-               PERFORM 6000-CONSULTAR
-               WHEN 3
-               PERFORM 7000-ALTERAR
-               WHEN 4
-               PERFORM 8000-EXCLUIR
-               WHEN 5
-               PERFORM 9000-RELATORIOTELA.
-          WHEN OTHER
-          WHEN 6
-               PERFORM 9100-RELATORIODISCO.
-          WHEN OTHER
-                   IF WRK-OPCAO NOT = 'X'
-                       DISPLAY 'ENTRE COM O VALOR CORRETO'
-                   END-IF
-           END-EVALUATE.
+        WHEN '1'
+        PERFORM 5000-INCLUIR
+        WHEN '2'
+        PERFORM 6000-CONSULTAR
+        WHEN '3'
+        PERFORM 7000-ALTERAR
+        WHEN '4'
+        PERFORM 8000-EXCLUIR
+        WHEN '5'
+        PERFORM 9000-RELATORIOTELA
+       WHEN '6'
+        PERFORM 9100-RELATORIODISCO
+        WHEN OTHER
+        IF WRK-OPCAO NOT = 'X'
+            DISPLAY 'ENTRE COM O VALOR CORRETO'
+        END-IF
+       END-EVALUATE.
+
                  PERFORM 1100-MONTATELA.
        3000-FINALIZAR.
        CLOSE CLIENTES.
@@ -162,29 +163,26 @@
         END-READ.
             ACCEPT MOSTRA-ERRO.
        7000-ALTERAR.
-         MOVE 'MODULO - CONSULTAR' TO WRK-MODULO.
+        MOVE 'MODULO - CONSULTAR' TO WRK-MODULO.
        DISPLAY TELA.
-         DISPLAY TELA-REGISTRO.
-         ACCEPT CHAVE.
-         READ CLIENTES
-         IF CLIENTES-STATUS = 0
-             ACCEPT SS-DADOS
-             REWRITE CLIENTES-REG
-             IF CLIENTES-STATUS = 0
-           MOVE 'REGISTRO ALTERADO' TO WRK-MSGERRO
-           ACCEPT MOSTRA-ERRO
-           ELSE
-               MOVE 'REGISTRO NAO ALTERADO' TO WRK-MSGERRO
-               ACCEPT MOSTRA-ERRO
-             ELSE
-                 MOVE 'REGISTRADO NAO ALTERADO'
-                             TO WRK-MSGERRO
-                             ACCEPT MOSTRA-ERRO
-                         END-IF
-                     ELSE
-                         MOVE 'REGISTRO NAO ENCONTRADO' TO MSG-ERRO
-                         ACCEPT MOSTRA-ERRO
-                     END-IF.
+       DISPLAY TELA-REGISTRO.
+       ACCEPT CHAVE.
+       READ CLIENTES
+        IF CLIENTES-STATUS = 0
+        ACCEPT SS-DADOS
+        REWRITE CLIENTES-REG
+        IF CLIENTES-STATUS = 0
+            MOVE 'REGISTRO ALTERADO' TO WRK-MSGERRO
+            ACCEPT MOSTRA-ERRO
+        ELSE
+            MOVE 'REGISTRO NAO ALTERADO' TO WRK-MSGERRO
+            ACCEPT MOSTRA-ERRO
+        END-IF
+       ELSE
+        MOVE 'REGISTRO NAO ENCONTRADO' TO WRK-MSGERRO
+        ACCEPT MOSTRA-ERRO
+       END-IF.
+
 
        8000-EXCLUIR.
        MOVE 'MODULO - EXCLUSAO' TO WRK-MODULO.
@@ -205,63 +203,64 @@
        END-DELETE
        END-IF.
        9000-RELATORIOTELA.
-           MOVE 'MODULO - EXCLUSAO' TO WRK-MODULO.
-       DISPLAY TELA.
-       MOVE 12345 TO CLIENTES-FONE.
-       START CLIENTES KEY EQUAL CLIENTES-FONE.
-       READ CLIENTES
-       INVALID KEY
-       MOVE 'NENHUM REGISTRO ENCONTRADO' TO WRK-MSGERRO
-       NOT INVALID KEY
-        DISPLAY 'RELATORIO DE CLIENTES'
-        DISPLAY '________________________'
-                PERFORM UNTIL CLIENTES-STATUS = 10
-                AND 1 TO WRK-QTREGISTROS.
+       MOVE 'MODULO - RELATORIO' TO WRK-MODULO
+        DISPLAY TELA
+        MOVE 12345 TO CLIENTES-FONE
+
+        READ CLIENTES
+        INVALID KEY
+            MOVE 'NENHUM REGISTRO ENCONTRADO' TO WRK-MSGERRO
+            ACCEPT MOSTRA-ERRO
+        NOT INVALID KEY
+            DISPLAY 'RELATORIO DE CLIENTES'
+            DISPLAY '________________________'
+
+            PERFORM UNTIL CLIENTES-STATUS = 10
+                ADD 1 TO WRK-QTREGISTROS
                 DISPLAY CLIENTES-FONE ' '
-                CLIENTES-NOME ' '
-                CLIENTES-EMAIL
+                        CLIENTES-NOME ' '
+                        CLIENTES-EMAIL
+
                 READ CLIENTES NEXT
 
                 ADD 1 TO WRK-CONTALINHA
                 IF WRK-CONTALINHA > 5
-                    MOVE 'PESSIONE ALGUMA TECLA' TO WRK-MSGERRO
+                    MOVE 'PRESSIONE ALGUMA TECLA' TO WRK-MSGERRO
                     ACCEPT MOSTRA-ERRO
-                    MOVE 'MODULO - RELATORIO ' TO WRK-MODULO
-                    DISPLAY TELA.
-                     DISPLAY 'RELATORIO DE CLIENTES'
-                     DISPLAY '________________________'
-                     MOVE 0 TO WRK-CONTALINHA
-                     END-IF
-                END-PERFORM
-                END-READ.
-                    MOVE 'REGISTROS LIDOS' TO WRK-MSGERRO.
-                    MOVE WRK-QTREGISTROS TO WRK-MESGERRO(17:05).
-               ACCEPT MOSTRA-ERRO.
+                    MOVE 'MODULO - RELATORIO' TO WRK-MODULO
+                    DISPLAY TELA
+                    DISPLAY 'RELATORIO DE CLIENTES'
+                    DISPLAY '________________________'
+                    MOVE 0 TO WRK-CONTALINHA
+                END-IF
+            END-PERFORM
+
+            MOVE 'REGISTROS LIDOS' TO WRK-MSGERRO
+            MOVE WRK-QTREGISTROS TO WRK-MSGERRO(17:05)
+            ACCEPT MOSTRA-ERRO
+            END-READ.
+
 
 
         9100-RELATORIODISCO.
-                 MOVE ' MODULO RELATORIO' TO WRK-MODULO.
-                 MOVE 'APERTE F3 PARA SAIR' TO WRK-MODULO.
-                 DISPLAY TELA.
-                 MOVE 12345 TO CLIENTES-FONE.
-                 START CLIENTES KEY EQUAL CLIENTES-FONE.
-                 READ CLIENTES
-                     INVALID KEY
-                         MOVE 'NENHUM REGISTRO ENCONTRADO'
-                         TO WRK-MSGERRO
-                      NOT INVALID KEY
-                        OPEN OUTPUT RELATO
-                      PERFORM UNTIL CLIENTES-STATUS = 10
-                        ADD 1 TO WRK-QTREGISTROS
-                          MOVE CLIENTES-REG TO RELATO-REG
-                          WRITE RELATO-REG
-                          READ CLIENTES NEXT
-                      END-PERFORM
-      *                   MOVE 'REGISTROS LIDOS ' TO RELATO-REG
-      *                   MOVE WRK-QTREGISTROS TO RELATO-REG(18:05)
-      *                   WRITE RELATO-REG
-                         CLOSE RELATO
-                        END-READ.
-                          MOVE 'REGISTROS LIDO' TO WRK-MSGERRO.
-                          MOVE WRK-QTREGISTROS TO WRK-MSGERRO(17:05).
-                          ACCEPT MOSTRA-ERRO.
+       MOVE 'MODULO - RELATORIO' TO WRK-MODULO
+       DISPLAY TELA
+       MOVE 12345 TO CLIENTES-FONE
+
+        READ CLIENTES
+        INVALID KEY
+            MOVE 'NENHUM REGISTRO ENCONTRADO' TO WRK-MSGERRO
+            ACCEPT MOSTRA-ERRO
+        NOT INVALID KEY
+            OPEN OUTPUT RELATO
+            PERFORM UNTIL CLIENTES-STATUS = 10
+                ADD 1 TO WRK-QTREGISTROS
+                MOVE CLIENTES-REG TO RELATO-REG
+                WRITE RELATO-REG
+                READ CLIENTES NEXT
+            END-PERFORM
+            CLOSE RELATO
+            MOVE 'REGISTROS LIDOS' TO WRK-MSGERRO
+            MOVE WRK-QTREGISTROS TO WRK-MSGERRO(17:05)
+            ACCEPT MOSTRA-ERRO
+       END-READ.
