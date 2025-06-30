@@ -87,9 +87,6 @@ C:\Users\Windows\Cobol\ProjetoFinalCobol\RELATO.TXT
    CLIENTES.exe
    ```
 
-3. **Primeira Execução:**
-   - O sistema criará automaticamente o arquivo CLIENTES.DAT caso não exista
-   - O arquivo será criado como arquivo indexado com organização dinâmica
 
 ## Características Técnicas
 
@@ -97,17 +94,6 @@ C:\Users\Windows\Cobol\ProjetoFinalCobol\RELATO.TXT
 - **CLIENTES.DAT:** Arquivo indexado com acesso dinâmico
 - **RELATO.TXT:** Arquivo sequencial para relatórios
 
-### Interface do Usuário
-- Interface baseada em terminal com cores
-- Telas organizadas com campos de entrada específicos
-- Mensagens de erro contextualizadas
-- Sistema de navegação por menu numérico
-
-### Tratamento de Erros
-- Validação de chaves duplicadas
-- Verificação de registros não encontrados
-- Status de arquivo para controle de operações
-- Mensagens informativas para o usuário
 
 ## Estrutura do Menu
 
