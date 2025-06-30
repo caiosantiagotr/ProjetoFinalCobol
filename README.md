@@ -131,25 +131,6 @@ O arquivo RELATO.TXT contém exemplos de registros:
 - Cliente: CAIO DE SOUZA GOMES SANTIAGO (Tel: 992321111)
 - Cliente: VITORIA (Tel: 992324339)
 
-## Melhorias Sugeridas
-
-1. **Validação de Dados:**
-   - Validação de formato de email
-   - Validação de formato de telefone
-   - Campos obrigatórios
-
-2. **Interface:**
-   - Melhor formatação de relatórios
-   - Opção de busca por nome
-   - Ordenação de registros
-
-3. **Funcionalidades:**
-   - Backup de dados
-   - Exportação em diferentes formatos
-   - Estatísticas do sistema
-
-## Suporte
-Para dúvidas ou sugestões, entre em contato com o desenvolvedor através das informações disponíveis no código fonte.
 
 ---
 *Sistema desenvolvido em COBOL para fins educacionais e de gestão básica de clientes.*
